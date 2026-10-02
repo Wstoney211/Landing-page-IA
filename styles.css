@@ -641,7 +641,7 @@ input {
 }
 .h1 {
     max-width: 680px;
-    height: 128px;
+    height: 112px;
     font-size: var(--fs-4xl);
     line-height: var(--lh-4xl);
     background-image: linear-gradient(90deg, var(--hero-a), var(--hero-b));

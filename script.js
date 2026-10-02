@@ -16,6 +16,32 @@
   menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && root.classList.contains('menu-open')){ setMenu(false); burger.focus(); } });
 
+  /* theme toggle */
+  var themeBtn = document.getElementById('themeToggle');
+  var themeIcon = themeBtn.querySelector('use'), themeLabel = themeBtn.querySelector('.tlabel');
+  function readTheme(){ try { return localStorage.getItem('aumigos-theme'); } catch(e){ return null; } }
+  function writeTheme(v){ try { if(v) localStorage.setItem('aumigos-theme', v); else localStorage.removeItem('aumigos-theme'); } catch(e){} }
+  function effectiveTheme(){
+    var attr = root.getAttribute('data-theme');
+    if(attr === 'light' || attr === 'dark') return attr;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function syncThemeBtn(){
+    var target = effectiveTheme() === 'dark' ? 'light' : 'dark';
+    themeBtn.setAttribute('aria-pressed', effectiveTheme() === 'dark' ? 'true' : 'false');
+    themeIcon.setAttribute('href', target === 'dark' ? '#i-moon' : '#i-sun');
+    themeLabel.textContent = target === 'dark' ? 'Modo escuro' : 'Modo claro';
+  }
+  var storedTheme = readTheme();
+  if(storedTheme === 'light' || storedTheme === 'dark') root.setAttribute('data-theme', storedTheme);
+  syncThemeBtn();
+  themeBtn.addEventListener('click', function(){
+    var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    writeTheme(next);
+    syncThemeBtn();
+  });
+
   /* current section in menu */
   var links = Array.prototype.slice.call(menu.querySelectorAll('a'));
   var byId = {};
